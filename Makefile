@@ -1,35 +1,26 @@
-NAME		=	libftprintf.a
+NAME = libftprintf.a
 
-DIR_SRCS	=	srcs
-DIR_OBJS	=	objs
+SRCS = ft_printf.c ft_printf_utils.c
 
-SRCS 		= 	$(DIR_SRCS)/ft_printf.c \
-$(DIR_SRCS)/ft_printf_utils.c \
+OBJS = ${SRCS:.c=.o}
 
-OBJS		=	$(subst $(DIR_SRCS), $(DIR_OBJS), $(SRCS:.c=.o))
+CC = gcc
+RM = rm -f
+ARCHIVE = ar rcs
+CFLAGS = -Wall -Werror -Wextra
 
-INCLUDES	=	-I includes
+all: ${NAME}
 
-CC			=	gcc
-CFLAGS		=	-Wall -Wextra -Werror
+.c.o:
+	${CC} ${CFLAGS} -g -c $< -o ${<:.c=.o}
 
-$(DIR_OBJS)/%.o :	$(DIR_SRCS)/%.c
-			mkdir -p $(DIR_OBJS)
-			$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+${NAME}: ${OBJS}
+	${ARCHIVE} ${NAME} ${OBJS}
 
-all:		$(NAME)
+clean: 
+	${RM} ${OBJS}
 
-$(NAME):	$(OBJS)
-			ar -rcs $(NAME) $(OBJS)
-			ranlib $(NAME)
+fclean: clean
+	${RM} ${NAME}
 
-clean:
-			rm -rf $(OBJS)
-			rm -rf $(DIR_OBJS)
-
-fclean:		clean
-			rm -rf $(NAME)
-
-re:			fclean all
-
-.PHONY:		all clean fclean re
+re: fclean all 
